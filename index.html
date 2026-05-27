@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Excel Formulas Dictionary by XLclick</title>
+     <meta name="description" content="Search 78 Excel formulas by name, tag, or category. Instant offline reference with syntax and examples — by XLclick.com." />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #0f1117;
+      --surface:   #1a1d27;
+      --surface2:  #22263a;
+      --border:    #2e3245;
+      --text:      #e8eaf0;
+      --muted:     #7c82a0;
+      --accent:    #4f8ef7;
+      --radius:    12px;
+      --radius-sm: 6px;
+
+      --cat-lookup:      #4f8ef7;
+      --cat-financial:   #34c98a;
+      --cat-text:        #a855f7;
+      --cat-date:        #f59e0b;
+      --cat-logical:     #ef4444;
+      --cat-math:        #f97316;
+      --cat-statistical: #06b6d4;
+      --cat-array:       #ec4899;
+      --cat-information: #8b8fa8;
+
+      --diff-beginner:     #34c98a;
+      --diff-intermediate: #f59e0b;
+      --diff-advanced:     #ef4444;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.5;
+    }
+
+    /* ── Header ─────────────────────────────────────── */
+    header {
+      background: linear-gradient(135deg, #141826 0%, #1a1f35 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 40px 24px 32px;
+      text-align: center;
+    }
+
+    .logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .logo-icon {
+      width: 36px; height: 36px;
+      background: linear-gradient(135deg, var(--accent), #7c3aed);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
+    }
+    .logo-text { font-size: 14px; font-weight: 600; color: var(--muted); letter-spacing: .06em; text-transform: uppercase; }
+
+    header h1 {
+      font-size: clamp(24px, 5vw, 40px);
+      font-weight: 700;
+      letter-spacing: -.02em;
+      background: linear-gradient(135deg, #fff 30%, #7c82a0);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 8px;
+    }
+    header p { color: var(--muted); font-size: 15px; }
+    .badge-count {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(79,142,247,.12); color: var(--accent);
+      border: 1px solid rgba(79,142,247,.25);
+      padding: 3px 10px; border-radius: 20px; font-size: 13px; font-weight: 600;
+      margin-left: 8px; vertical-align: middle;
+    }
+
+    /* ── Search ──────────────────────────────────────── */
+    .search-wrap {
+      max-width: 680px; margin: 28px auto 0; padding: 0 16px;
+    }
+    .search-box {
+      position: relative;
+    }
+    .search-box svg {
+      position: absolute; left: 16px; top: 50%; transform: translateY(-50%);
+      color: var(--muted); pointer-events: none;
+    }
+    #search {
+      width: 100%; padding: 14px 16px 14px 46px;
+      background: var(--surface); border: 1.5px solid var(--border);
+      border-radius: var(--radius); color: var(--text); font-size: 16px;
+      outline: none; transition: border-color .2s, box-shadow .2s;
+    }
+    #search::placeholder { color: var(--muted); }
+    #search:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(79,142,247,.15); }
+    .kbd-hint {
+      position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
+      display: flex; gap: 4px;
+    }
+    .kbd {
+      background: var(--surface2); border: 1px solid var(--border);
+      color: var(--muted); font-size: 11px; padding: 2px 6px; border-radius: 4px;
+    }
+
+    /* ── Filters ──────────────────────────────────────── */
+    .filters {
+      max-width: 1200px; margin: 24px auto 0; padding: 0 24px;
+      display: flex; flex-wrap: wrap; gap: 10px; align-items: center;
+    }
+    .filter-label { font-size: 12px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: .06em; margin-right: 4px; }
+    .pill {
+      padding: 5px 14px; border-radius: 20px; font-size: 13px; font-weight: 500; cursor: pointer;
+      border: 1.5px solid var(--border); background: transparent; color: var(--muted);
+      transition: all .15s; white-space: nowrap;
+    }
+    .pill:hover { border-color: var(--text); color: var(--text); }
+    .pill.active { color: #fff; border-color: transparent; }
+    .pill[data-cat="all"].active, .pill[data-diff="all"].active { background: var(--accent); }
+    .pill[data-cat="lookup"].active    { background: var(--cat-lookup); }
+    .pill[data-cat="financial"].active { background: var(--cat-financial); }
+    .pill[data-cat="text"].active      { background: var(--cat-text); }
+    .pill[data-cat="date"].active      { background: var(--cat-date); color: #000; }
+    .pill[data-cat="logical"].active   { background: var(--cat-logical); }
+    .pill[data-cat="math"].active      { background: var(--cat-math); }
+    .pill[data-cat="statistical"].active { background: var(--cat-statistical); }
+    .pill[data-cat="array"].active     { background: var(--cat-array); }
+    .pill[data-cat="information"].active { background: var(--cat-information); }
+    .pill[data-diff="beginner"].active     { background: var(--diff-beginner); color: #000; }
+    .pill[data-diff="intermediate"].active { background: var(--diff-intermediate); color: #000; }
+    .pill[data-diff="advanced"].active     { background: var(--diff-advanced); }
+    .divider { width: 1px; height: 20px; background: var(--border); margin: 0 4px; }
+
+    /* ── Results bar ────────────────────────────────── */
+    .results-bar {
+      max-width: 1200px; margin: 20px auto 0; padding: 0 24px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .results-count { font-size: 13px; color: var(--muted); }
+    .results-count span { color: var(--text); font-weight: 600; }
+    .sort-btn {
+      background: none; border: 1px solid var(--border); color: var(--muted);
+      padding: 4px 12px; border-radius: var(--radius-sm); font-size: 12px; cursor: pointer;
+      transition: all .15s;
+    }
+    .sort-btn:hover { border-color: var(--text); color: var(--text); }
+
+    /* ── Grid ───────────────────────────────────────── */
+    .grid {
+      max-width: 1200px; margin: 16px auto 60px; padding: 0 24px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 16px;
+    }
+
+    /* ── Card ───────────────────────────────────────── */
+    .card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 20px;
+      cursor: pointer; transition: border-color .2s, transform .15s, box-shadow .2s;
+      animation: fadeIn .2s ease both;
+      display: flex; flex-direction: column; gap: 12px;
+    }
+    .card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0,0,0,.4);
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .card-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+    .card-name {
+      font-size: 18px; font-weight: 700; letter-spacing: -.01em;
+      font-family: "SF Mono", "Fira Code", "Cascadia Code", monospace;
+    }
+    mark {
+      background: rgba(79,142,247,.3); color: inherit;
+      border-radius: 2px; padding: 0 1px;
+    }
+    .badges { display: flex; gap: 6px; flex-wrap: wrap; flex-shrink: 0; }
+    .badge {
+      font-size: 11px; font-weight: 600; padding: 2px 8px;
+      border-radius: 4px; text-transform: capitalize; white-space: nowrap;
+    }
+    .badge-cat  { color: #fff; }
+    .badge-diff { color: #000; font-size: 10px; opacity: .9; }
+
+    .badge-cat[data-cat="lookup"]      { background: rgba(79,142,247,.2);  color: var(--cat-lookup); }
+    .badge-cat[data-cat="financial"]   { background: rgba(52,201,138,.2);  color: var(--cat-financial); }
+    .badge-cat[data-cat="text"]        { background: rgba(168,85,247,.2);  color: var(--cat-text); }
+    .badge-cat[data-cat="date"]        { background: rgba(245,158,11,.2);  color: var(--cat-date); }
+    .badge-cat[data-cat="logical"]     { background: rgba(239,68,68,.2);   color: var(--cat-logical); }
+    .badge-cat[data-cat="math"]        { background: rgba(249,115,22,.2);  color: var(--cat-math); }
+    .badge-cat[data-cat="statistical"] { background: rgba(6,182,212,.2);   color: var(--cat-statistical); }
+    .badge-cat[data-cat="array"]       { background: rgba(236,72,153,.2);  color: var(--cat-array); }
+    .badge-cat[data-cat="information"] { background: rgba(139,143,168,.2); color: var(--cat-information); }
+
+    .badge-diff[data-diff="beginner"]     { background: rgba(52,201,138,.15); color: var(--diff-beginner); }
+    .badge-diff[data-diff="intermediate"] { background: rgba(245,158,11,.15); color: var(--diff-intermediate); }
+    .badge-diff[data-diff="advanced"]     { background: rgba(239,68,68,.15);  color: var(--diff-advanced); }
+
+    .card-syntax {
+      font-family: "SF Mono", "Fira Code", "Cascadia Code", monospace;
+      font-size: 12px; color: var(--muted);
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); padding: 8px 12px;
+      white-space: pre-wrap; word-break: break-all;
+      position: relative;
+    }
+    .copy-btn {
+      position: absolute; top: 6px; right: 6px;
+      background: var(--surface); border: 1px solid var(--border);
+      color: var(--muted); padding: 2px 7px; border-radius: 4px;
+      font-size: 10px; cursor: pointer; opacity: 0; transition: opacity .15s;
+    }
+    .card-syntax:hover .copy-btn { opacity: 1; }
+    .copy-btn:hover { background: var(--border); color: var(--text); }
+
+    .card-desc { font-size: 14px; color: #b0b4cc; line-height: 1.6; }
+
+    .example-block {
+      background: var(--surface2); border-radius: var(--radius-sm);
+      padding: 10px 12px; font-size: 12px;
+      border-left: 3px solid var(--border);
+    }
+    .example-row { display: flex; gap: 8px; align-items: baseline; }
+    .ex-label { color: var(--muted); font-weight: 600; width: 46px; flex-shrink: 0; font-size: 10px; text-transform: uppercase; letter-spacing: .05em; }
+    .ex-val { font-family: "SF Mono","Fira Code",monospace; color: var(--text); word-break: break-all; }
+    .ex-val.output { color: #34c98a; }
+    .ex-explain { color: var(--muted); font-size: 12px; margin-top: 6px; line-height: 1.5; }
+
+    .tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .tag {
+      font-size: 11px; color: var(--muted); background: var(--surface2);
+      border: 1px solid var(--border); border-radius: 4px; padding: 2px 7px;
+    }
+
+    /* ── Empty state ─────────────────────────────────── */
+    .empty {
+      max-width: 400px; margin: 80px auto; text-align: center; padding: 0 24px;
+    }
+    .empty-icon { font-size: 48px; margin-bottom: 16px; }
+    .empty h3 { font-size: 18px; margin-bottom: 8px; }
+    .empty p { color: var(--muted); font-size: 14px; }
+
+    /* ── Modal ───────────────────────────────────────── */
+    .overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,.7); backdrop-filter: blur(4px);
+      z-index: 100; display: flex; align-items: center; justify-content: center; padding: 24px;
+      opacity: 0; pointer-events: none; transition: opacity .2s;
+    }
+    .overlay.open { opacity: 1; pointer-events: all; }
+    .modal {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 16px; max-width: 600px; width: 100%; max-height: 85vh;
+      overflow-y: auto; padding: 28px;
+      transform: translateY(16px) scale(.98); transition: transform .2s;
+    }
+    .overlay.open .modal { transform: translateY(0) scale(1); }
+    .modal-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 20px; }
+    .modal-name {
+      font-size: 26px; font-weight: 700;
+      font-family: "SF Mono","Fira Code","Cascadia Code",monospace;
+    }
+    .close-btn {
+      background: var(--surface2); border: 1px solid var(--border); color: var(--muted);
+      width: 32px; height: 32px; border-radius: 8px; cursor: pointer; font-size: 18px;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+      transition: all .15s;
+    }
+    .close-btn:hover { background: var(--border); color: var(--text); }
+    .modal-section { margin-bottom: 20px; }
+    .modal-section-title { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .07em; font-weight: 700; margin-bottom: 8px; }
+    .modal-syntax {
+      font-family: "SF Mono","Fira Code","Cascadia Code",monospace;
+      font-size: 13px; color: #a5b4fc; background: var(--surface2);
+      border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 12px 16px;
+      word-break: break-all; white-space: pre-wrap;
+    }
+    .modal-desc { font-size: 15px; line-height: 1.7; color: #c4c8e0; }
+    .related { display: flex; flex-wrap: wrap; gap: 8px; }
+    .related-chip {
+      font-family: monospace; font-size: 12px; font-weight: 600;
+      padding: 4px 10px; border-radius: var(--radius-sm);
+      background: rgba(79,142,247,.1); color: var(--accent);
+      border: 1px solid rgba(79,142,247,.2); cursor: pointer; transition: all .15s;
+    }
+    .related-chip:hover { background: rgba(79,142,247,.2); }
+
+    /* ── Scrollbar ───────────────────────────────────── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+    /* ── Responsive ───────────────────────────────────── */
+    @media (max-width: 600px) {
+      .grid { grid-template-columns: 1fr; padding: 0 16px; }
+      .filters { padding: 0 16px; }
+      .results-bar { padding: 0 16px; }
+      .kbd-hint { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-icon">📊</div>
+    <span class="logo-text">xlclick</span>
+  </div>
+  <h1>Excel Formulas Dictionary</h1>
+  <p>A structured reference for every Excel formula
+    <span class="badge-count" id="totalCount">0 formulas</span>
+  </p>
+</header>
+
+<div class="search-wrap">
+  <div class="search-box">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+    </svg>
+    <input id="search" type="search" placeholder="Search by name, description, tag… (e.g. lookup, loan, date)" autocomplete="off" />
+    <div class="kbd-hint"><span class="kbd">⌘</span><span class="kbd">K</span></div>
+  </div>
+</div>
+
+<div class="filters">
+  <span class="filter-label">Category</span>
+  <button class="pill active" data-cat="all">All</button>
+  <button class="pill" data-cat="lookup">Lookup</button>
+  <button class="pill" data-cat="financial">Financial</button>
+  <button class="pill" data-cat="text">Text</button>
+  <button class="pill" data-cat="date">Date</button>
+  <button class="pill" data-cat="logical">Logical</button>
+  <button class="pill" data-cat="math">Math</button>
+  <button class="pill" data-cat="statistical">Statistical</button>
+  <button class="pill" data-cat="array">Array</button>
+  <button class="pill" data-cat="information">Information</button>
+  <div class="divider"></div>
+  <span class="filter-label">Level</span>
+  <button class="pill active" data-diff="all">All</button>
+  <button class="pill" data-diff="beginner">Beginner</button>
+  <button class="pill" data-diff="intermediate">Intermediate</button>
+  <button class="pill" data-diff="advanced">Advanced</button>
+</div>
+
+<div class="results-bar">
+  <div class="results-count" id="resultsCount"></div>
+</div>
+
+<div class="grid" id="grid"></div>
+
+<div class="overlay" id="overlay">
+  <div class="modal" id="modal">
+    <div class="modal-header">
+      <div>
+        <div class="modal-name" id="m-name"></div>
+        <div class="badges" style="margin-top:8px" id="m-badges"></div>
+      </div>
+      <button class="close-btn" id="closeBtn">×</button>
+    </div>
+    <div class="modal-section">
+      <div class="modal-section-title">Syntax</div>
+      <div class="modal-syntax" id="m-syntax"></div>
+    </div>
+    <div class="modal-section">
+      <div class="modal-section-title">Description</div>
+      <div class="modal-desc" id="m-desc"></div>
+    </div>
+    <div class="modal-section">
+      <div class="modal-section-title">Example</div>
+      <div class="example-block" id="m-example"></div>
+    </div>
+    <div class="modal-section">
+      <div class="modal-section-title">Tags</div>
+      <div class="tags" id="m-tags"></div>
+    </div>
+    <div class="modal-section" id="m-related-section">
+      <div class="modal-section-title">Related Formulas</div>
+      <div class="related" id="m-related"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const FORMULAS = [
+  { id:"vlookup", name:"VLOOKUP", syntax:"VLOOKUP(lookup_value, table_array, col_index_num, [range_lookup])", description:"Searches for a value in the first column of a table and returns a value in the same row from a specified column. Use FALSE for exact match.", example:{input:'=VLOOKUP("Apple", A2:C10, 2, FALSE)',output:'"Fruit"',explanation:'Finds "Apple" in column A and returns the value from column B.'}, tags:["lookup","search","table","vertical","classic"], category:"lookup", difficulty:"beginner", relatedFormulas:["hlookup","xlookup","index","match"] },
+  { id:"hlookup", name:"HLOOKUP", syntax:"HLOOKUP(lookup_value, table_array, row_index_num, [range_lookup])", description:"Searches for a value in the top row of a table and returns a value in the same column from a specified row. Horizontal equivalent of VLOOKUP.", example:{input:'=HLOOKUP("Q1", A1:D5, 3, FALSE)',output:"1500",explanation:'Finds "Q1" in row 1 and returns the value from row 3 of that column.'}, tags:["lookup","search","table","horizontal"], category:"lookup", difficulty:"beginner", relatedFormulas:["vlookup","xlookup","index","match"] },
+  { id:"xlookup", name:"XLOOKUP", syntax:"XLOOKUP(lookup_value, lookup_array, return_array, [if_not_found], [match_mode], [search_mode])", description:"Modern replacement for VLOOKUP/HLOOKUP. Searches a range or array and returns an item corresponding to the first match. Supports exact, approximate, and wildcard matching.", example:{input:'=XLOOKUP("Smith", B2:B100, C2:C100, "Not found")',output:'"Engineer"',explanation:'Finds "Smith" in column B and returns the matching value from column C. Returns "Not found" if no match.'}, tags:["lookup","search","modern","dynamic","flexible"], category:"lookup", difficulty:"intermediate", relatedFormulas:["vlookup","hlookup","index","match","xmatch"] },
+  { id:"index", name:"INDEX", syntax:"INDEX(array, row_num, [col_num])", description:"Returns the value of an element in a table or array, selected by the row and column number indexes. Often combined with MATCH for flexible lookups.", example:{input:"=INDEX(A1:C10, 3, 2)",output:"42",explanation:"Returns the value from row 3, column 2 of the range A1:C10."}, tags:["lookup","position","array","index-match"], category:"lookup", difficulty:"intermediate", relatedFormulas:["match","xlookup","vlookup"] },
+  { id:"match", name:"MATCH", syntax:"MATCH(lookup_value, lookup_array, [match_type])", description:"Returns the relative position of an item in an array that matches a specified value. Use 0 for exact match. Commonly paired with INDEX.", example:{input:'=MATCH("Sales", A1:A20, 0)',output:"5",explanation:'"Sales" is found at position 5 in the range A1:A20.'}, tags:["lookup","position","index-match","find"], category:"lookup", difficulty:"intermediate", relatedFormulas:["index","xlookup","xmatch"] },
+  { id:"xmatch", name:"XMATCH", syntax:"XMATCH(lookup_value, lookup_array, [match_mode], [search_mode])", description:"Enhanced version of MATCH that supports wildcard and binary searches. Returns the relative position of a value in a list or array.", example:{input:'=XMATCH("*son", A1:A50, 2)',output:"7",explanation:'Finds the first name ending in "son" using wildcard mode.'}, tags:["lookup","position","modern","wildcard"], category:"lookup", difficulty:"intermediate", relatedFormulas:["match","xlookup"] },
+  { id:"indirect", name:"INDIRECT", syntax:"INDIRECT(ref_text, [a1])", description:"Returns the reference specified by a text string. Useful for building dynamic references from cell values or formula results.", example:{input:'=INDIRECT("Sheet2!A1")',output:"100",explanation:"Returns the value of cell A1 on Sheet2, referenced as a text string."}, tags:["lookup","dynamic","reference","advanced"], category:"lookup", difficulty:"advanced", relatedFormulas:["offset","index"] },
+  { id:"offset", name:"OFFSET", syntax:"OFFSET(reference, rows, cols, [height], [width])", description:"Returns a reference offset from a given reference by a specified number of rows and columns. Can return a range of cells.", example:{input:"=OFFSET(A1, 3, 2, 1, 1)",output:"78",explanation:"Returns the value 3 rows down and 2 columns right of A1."}, tags:["lookup","dynamic","reference","range"], category:"lookup", difficulty:"advanced", relatedFormulas:["indirect","index"] },
+  { id:"choose", name:"CHOOSE", syntax:"CHOOSE(index_num, value1, [value2], ...)", description:"Returns a value from a list of values based on an index number. Useful for mapping numbers to labels or values.", example:{input:'=CHOOSE(2, "Red", "Green", "Blue")',output:'"Green"',explanation:"Returns the 2nd value from the list, which is Green."}, tags:["lookup","conditional","list","map"], category:"lookup", difficulty:"beginner", relatedFormulas:["switch","if","ifs"] },
+  { id:"lookup", name:"LOOKUP", syntax:"LOOKUP(lookup_value, lookup_vector, [result_vector])", description:"Looks up a value in a one-row or one-column range. Assumes data is sorted in ascending order. Older alternative to VLOOKUP.", example:{input:"=LOOKUP(85, A2:A10, B2:B10)",output:'"Pass"',explanation:"Finds 85 in the score range and returns the corresponding grade."}, tags:["lookup","search","classic","sorted"], category:"lookup", difficulty:"beginner", relatedFormulas:["vlookup","xlookup"] },
+  { id:"pmt", name:"PMT", syntax:"PMT(rate, nper, pv, [fv], [type])", description:"Calculates the periodic payment for a loan based on constant payments and a constant interest rate.", example:{input:"=PMT(5%/12, 60, -20000)",output:"377.42",explanation:"Monthly payment for a $20,000 loan at 5% annual rate over 60 months."}, tags:["finance","loan","payment","interest"], category:"financial", difficulty:"intermediate", relatedFormulas:["pv","fv","nper","rate","ipmt","ppmt"] },
+  { id:"fv", name:"FV", syntax:"FV(rate, nper, pmt, [pv], [type])", description:"Returns the future value of an investment based on periodic, constant payments and a constant interest rate.", example:{input:"=FV(6%/12, 120, -500)",output:"81939.67",explanation:"Future value of $500/month for 10 years at 6% annual interest."}, tags:["finance","investment","savings","future-value"], category:"financial", difficulty:"intermediate", relatedFormulas:["pv","pmt","nper","rate"] },
+  { id:"pv", name:"PV", syntax:"PV(rate, nper, pmt, [fv], [type])", description:"Returns the present value of an investment — the total amount that a series of future payments is worth now.", example:{input:"=PV(7%/12, 36, -300)",output:"9717.31",explanation:"Present value of $300/month payments for 3 years at 7% annual rate."}, tags:["finance","investment","present-value","discounting"], category:"financial", difficulty:"intermediate", relatedFormulas:["fv","pmt","nper","rate"] },
+  { id:"npv", name:"NPV", syntax:"NPV(rate, value1, [value2], ...)", description:"Calculates the net present value of an investment using a discount rate and a series of future cash flows.", example:{input:"=NPV(10%, B2:B6) + A1",output:"1188.44",explanation:"NPV of cash flows in B2:B6 at 10% discount, plus initial investment in A1."}, tags:["finance","investment","cash-flow","valuation"], category:"financial", difficulty:"advanced", relatedFormulas:["irr","xnpv","pv"] },
+  { id:"irr", name:"IRR", syntax:"IRR(values, [guess])", description:"Returns the internal rate of return for a series of cash flows. The first value is typically the initial investment (negative).", example:{input:"=IRR(A1:A6)",output:"8.66%",explanation:"Calculates the rate of return for cash flows: -10000, 2500, 3000, 3500, 4000."}, tags:["finance","investment","rate-of-return","cash-flow"], category:"financial", difficulty:"advanced", relatedFormulas:["npv","xirr","mirr"] },
+  { id:"rate", name:"RATE", syntax:"RATE(nper, pmt, pv, [fv], [type], [guess])", description:"Returns the interest rate per period of an annuity. Useful for calculating the effective interest rate of a loan.", example:{input:"=RATE(60, -377.42, 20000) * 12",output:"5.00%",explanation:"Annual interest rate of a loan with 60 monthly payments of $377.42 on $20,000."}, tags:["finance","loan","interest-rate","annuity"], category:"financial", difficulty:"advanced", relatedFormulas:["pmt","nper","pv","fv"] },
+  { id:"nper", name:"NPER", syntax:"NPER(rate, pmt, pv, [fv], [type])", description:"Returns the number of periods for an investment based on periodic, constant payments and a constant interest rate.", example:{input:"=NPER(5%/12, -500, 25000)",output:"54.14",explanation:"Number of monthly payments to pay off a $25,000 loan at 5% with $500/month."}, tags:["finance","loan","periods","annuity"], category:"financial", difficulty:"intermediate", relatedFormulas:["pmt","rate","pv","fv"] },
+  { id:"ipmt", name:"IPMT", syntax:"IPMT(rate, per, nper, pv, [fv], [type])", description:"Returns the interest payment for a given period of an investment based on periodic, constant payments and a constant interest rate.", example:{input:"=IPMT(5%/12, 1, 60, -20000)",output:"83.33",explanation:"Interest portion of the first monthly payment on a $20,000 loan at 5%."}, tags:["finance","loan","interest","amortization"], category:"financial", difficulty:"advanced", relatedFormulas:["ppmt","pmt","rate"] },
+  { id:"ppmt", name:"PPMT", syntax:"PPMT(rate, per, nper, pv, [fv], [type])", description:"Returns the principal payment for a given period of an investment based on periodic, constant payments and a constant interest rate.", example:{input:"=PPMT(5%/12, 1, 60, -20000)",output:"294.09",explanation:"Principal portion of the first monthly payment on a $20,000 loan at 5%."}, tags:["finance","loan","principal","amortization"], category:"financial", difficulty:"advanced", relatedFormulas:["ipmt","pmt","rate"] },
+  { id:"concatenate", name:"CONCATENATE", syntax:"CONCATENATE(text1, [text2], ...)", description:"Joins several text strings into one string. Superseded by CONCAT and TEXTJOIN in modern Excel, but still widely supported.", example:{input:'=CONCATENATE("Hello", " ", "World")',output:'"Hello World"',explanation:"Joins three text strings into a single string."}, tags:["text","join","combine","string"], category:"text", difficulty:"beginner", relatedFormulas:["concat","textjoin"] },
+  { id:"textjoin", name:"TEXTJOIN", syntax:"TEXTJOIN(delimiter, ignore_empty, text1, [text2], ...)", description:"Joins text from multiple ranges or strings, with a delimiter between each item. Can ignore empty cells.", example:{input:'=TEXTJOIN(", ", TRUE, A1:A5)',output:'"Alice, Bob, Charlie, David, Eve"',explanation:"Joins names from A1:A5 with a comma-space delimiter, ignoring empty cells."}, tags:["text","join","delimiter","combine","modern"], category:"text", difficulty:"beginner", relatedFormulas:["concatenate","concat"] },
+  { id:"left", name:"LEFT", syntax:"LEFT(text, [num_chars])", description:"Returns the specified number of characters from the start (left side) of a text string.", example:{input:'=LEFT("ExcelFormula", 5)',output:'"Excel"',explanation:"Extracts the first 5 characters from the string."}, tags:["text","extract","substring","string"], category:"text", difficulty:"beginner", relatedFormulas:["right","mid","len"] },
+  { id:"right", name:"RIGHT", syntax:"RIGHT(text, [num_chars])", description:"Returns the specified number of characters from the end (right side) of a text string.", example:{input:'=RIGHT("Report_Q4_2024", 4)',output:'"2024"',explanation:"Extracts the last 4 characters — the year portion."}, tags:["text","extract","substring","string"], category:"text", difficulty:"beginner", relatedFormulas:["left","mid","len"] },
+  { id:"mid", name:"MID", syntax:"MID(text, start_num, num_chars)", description:"Returns a specific number of characters from a text string, starting at the position you specify.", example:{input:'=MID("INV-2024-001", 5, 4)',output:'"2024"',explanation:"Extracts 4 characters starting from position 5 of the invoice number."}, tags:["text","extract","substring","string"], category:"text", difficulty:"beginner", relatedFormulas:["left","right","find","len"] },
+  { id:"len", name:"LEN", syntax:"LEN(text)", description:"Returns the number of characters in a text string, including spaces.", example:{input:'=LEN("Hello World")',output:"11",explanation:"Counts all 11 characters including the space."}, tags:["text","count","length","string"], category:"text", difficulty:"beginner", relatedFormulas:["left","right","mid","trim"] },
+  { id:"trim", name:"TRIM", syntax:"TRIM(text)", description:"Removes all spaces from a text string except for single spaces between words. Essential for cleaning imported data.", example:{input:'=TRIM("  Hello   World  ")',output:'"Hello World"',explanation:"Removes leading, trailing, and extra internal spaces."}, tags:["text","clean","spaces","data-cleaning"], category:"text", difficulty:"beginner", relatedFormulas:["clean","substitute"] },
+  { id:"upper", name:"UPPER", syntax:"UPPER(text)", description:"Converts a text string to all uppercase letters.", example:{input:'=UPPER("hello world")',output:'"HELLO WORLD"',explanation:"Converts every character to its uppercase equivalent."}, tags:["text","case","uppercase","format"], category:"text", difficulty:"beginner", relatedFormulas:["lower","proper"] },
+  { id:"lower", name:"LOWER", syntax:"LOWER(text)", description:"Converts a text string to all lowercase letters.", example:{input:'=LOWER("JOHN SMITH")',output:'"john smith"',explanation:"Converts every character to its lowercase equivalent."}, tags:["text","case","lowercase","format"], category:"text", difficulty:"beginner", relatedFormulas:["upper","proper"] },
+  { id:"proper", name:"PROPER", syntax:"PROPER(text)", description:"Converts a text string to title case — the first letter in each word is capitalized, all others are lowercase.", example:{input:'=PROPER("john michael smith")',output:'"John Michael Smith"',explanation:"Capitalizes the first letter of each word."}, tags:["text","case","title-case","format","names"], category:"text", difficulty:"beginner", relatedFormulas:["upper","lower"] },
+  { id:"substitute", name:"SUBSTITUTE", syntax:"SUBSTITUTE(text, old_text, new_text, [instance_num])", description:"Replaces occurrences of a specified string within a text string. Case-sensitive. Can target a specific occurrence.", example:{input:'=SUBSTITUTE("2024-01-15", "-", "/")',output:'"2024/01/15"',explanation:"Replaces all hyphens with forward slashes in the date string."}, tags:["text","replace","find-replace","data-cleaning"], category:"text", difficulty:"intermediate", relatedFormulas:["replace","find","trim"] },
+  { id:"text", name:"TEXT", syntax:"TEXT(value, format_text)", description:"Converts a numeric value to text in a specified number format. Essential for concatenating formatted numbers with text.", example:{input:'=TEXT(1234567.89, "$#,##0.00")',output:'"$1,234,567.89"',explanation:"Formats a number as a currency string with thousands separator."}, tags:["text","format","number","currency","date"], category:"text", difficulty:"intermediate", relatedFormulas:["value","concatenate","textjoin"] },
+  { id:"value", name:"VALUE", syntax:"VALUE(text)", description:"Converts a text string that represents a number to a number. Useful when numbers are stored as text after importing data.", example:{input:'=VALUE("1,234.56")',output:"1234.56",explanation:"Converts the text representation of a number into an actual numeric value."}, tags:["text","convert","number","data-cleaning"], category:"text", difficulty:"beginner", relatedFormulas:["text","numbervalue"] },
+  { id:"find", name:"FIND", syntax:"FIND(find_text, within_text, [start_num])", description:"Returns the starting position of one text string within another. Case-sensitive and does not support wildcards.", example:{input:'=FIND("@", "user@example.com")',output:"5",explanation:'Returns 5 — the position of "@" in the email address.'}, tags:["text","search","position","case-sensitive"], category:"text", difficulty:"intermediate", relatedFormulas:["search","mid","left","right"] },
+  { id:"today", name:"TODAY", syntax:"TODAY()", description:"Returns the current date as a serial number. Updates every time the worksheet recalculates. Takes no arguments.", example:{input:"=TODAY()",output:"2024-01-15",explanation:"Returns today's date. The value changes each day when the workbook recalculates."}, tags:["date","current","dynamic","now"], category:"date", difficulty:"beginner", relatedFormulas:["now","date","year","month","day"] },
+  { id:"now", name:"NOW", syntax:"NOW()", description:"Returns the current date and time as a serial number. Updates whenever the worksheet recalculates.", example:{input:"=NOW()",output:"2024-01-15 14:30:00",explanation:"Returns the current date and time, updating on each recalculation."}, tags:["date","time","current","dynamic","timestamp"], category:"date", difficulty:"beginner", relatedFormulas:["today","hour","minute","second"] },
+  { id:"date", name:"DATE", syntax:"DATE(year, month, day)", description:"Returns a date from individual year, month, and day components. Useful for constructing dates dynamically from cell references.", example:{input:"=DATE(2024, 12, 31)",output:"2024-12-31",explanation:"Constructs December 31, 2024 from its year, month, and day parts."}, tags:["date","construct","build","components"], category:"date", difficulty:"beginner", relatedFormulas:["year","month","day","today"] },
+  { id:"datedif", name:"DATEDIF", syntax:'DATEDIF(start_date, end_date, unit)', description:'Calculates the difference between two dates in specified units: "Y" (years), "M" (months), "D" (days), "YM", "MD", "YD".', example:{input:'=DATEDIF("2000-05-01", TODAY(), "Y")',output:"23",explanation:"Calculates the number of complete years between May 1, 2000 and today."}, tags:["date","difference","age","duration","calculate"], category:"date", difficulty:"intermediate", relatedFormulas:["days","edate","networkdays"] },
+  { id:"edate", name:"EDATE", syntax:"EDATE(start_date, months)", description:"Returns the date that is the indicated number of months before or after a start date. Useful for calculating maturity dates.", example:{input:'=EDATE("2024-01-31", 3)',output:"2024-04-30",explanation:"Returns the date 3 months after January 31, 2024."}, tags:["date","months","offset","maturity","finance"], category:"date", difficulty:"intermediate", relatedFormulas:["eomonth","date","today"] },
+  { id:"eomonth", name:"EOMONTH", syntax:"EOMONTH(start_date, months)", description:"Returns the last day of the month that is the indicated number of months before or after the start date.", example:{input:'=EOMONTH("2024-02-01", 0)',output:"2024-02-29",explanation:"Returns the last day of February 2024 (a leap year)."}, tags:["date","end-of-month","last-day","finance","reporting"], category:"date", difficulty:"intermediate", relatedFormulas:["edate","date","today"] },
+  { id:"workday", name:"WORKDAY", syntax:"WORKDAY(start_date, days, [holidays])", description:"Returns the date that is the specified number of working days before or after a date, excluding weekends and holidays.", example:{input:'=WORKDAY("2024-01-01", 10)',output:"2024-01-15",explanation:"Returns the date 10 working days after January 1, 2024 (excluding weekends)."}, tags:["date","business-days","workday","schedule","hr"], category:"date", difficulty:"intermediate", relatedFormulas:["networkdays","workday.intl","edate"] },
+  { id:"networkdays", name:"NETWORKDAYS", syntax:"NETWORKDAYS(start_date, end_date, [holidays])", description:"Returns the number of whole working days between two dates, excluding weekends and any specified holidays.", example:{input:'=NETWORKDAYS("2024-01-01", "2024-01-31")',output:"23",explanation:"Counts 23 working days in January 2024 (excluding weekends)."}, tags:["date","business-days","count","hr","project"], category:"date", difficulty:"intermediate", relatedFormulas:["workday","days","datedif"] },
+  { id:"weekday", name:"WEEKDAY", syntax:"WEEKDAY(serial_number, [return_type])", description:"Returns the day of the week for a date. Returns 1-7 by default (1=Sunday). Use return_type=2 for 1=Monday.", example:{input:'=WEEKDAY("2024-01-15", 2)',output:"1",explanation:"January 15, 2024 is a Monday, which returns 1 with return_type=2."}, tags:["date","day-of-week","weekend","schedule"], category:"date", difficulty:"beginner", relatedFormulas:["weeknum","today","workday"] },
+  { id:"if", name:"IF", syntax:"IF(logical_test, value_if_true, [value_if_false])", description:"Returns one value if a condition is true and another value if it is false. The most fundamental logical function.", example:{input:'=IF(A1 >= 60, "Pass", "Fail")',output:'"Pass"',explanation:'Returns "Pass" when the value in A1 is 60 or greater, otherwise "Fail".'}, tags:["logical","conditional","test","branch"], category:"logical", difficulty:"beginner", relatedFormulas:["ifs","iferror","and","or","switch"] },
+  { id:"ifs", name:"IFS", syntax:"IFS(logical_test1, value_if_true1, [logical_test2, value_if_true2], ...)", description:"Checks multiple conditions and returns the value corresponding to the first true condition. Cleaner alternative to nested IFs.", example:{input:'=IFS(A1>=90,"A", A1>=80,"B", A1>=70,"C", A1>=60,"D", TRUE,"F")',output:'"B"',explanation:"Assigns a letter grade based on a numeric score using multiple conditions."}, tags:["logical","conditional","multiple","grading"], category:"logical", difficulty:"intermediate", relatedFormulas:["if","switch","choose"] },
+  { id:"iferror", name:"IFERROR", syntax:"IFERROR(value, value_if_error)", description:"Returns a specified value if a formula evaluates to an error; otherwise returns the result of the formula. Great for clean dashboards.", example:{input:'=IFERROR(VLOOKUP(A1, B:C, 2, FALSE), "Not Found")',output:'"Not Found"',explanation:'Returns "Not Found" instead of a #N/A error when VLOOKUP fails.'}, tags:["logical","error-handling","clean","dashboard"], category:"logical", difficulty:"beginner", relatedFormulas:["ifna","if","isna","iserror"] },
+  { id:"ifna", name:"IFNA", syntax:"IFNA(value, value_if_na)", description:"Returns a specified value if a formula returns the #N/A error; otherwise returns the result of the formula. More specific than IFERROR.", example:{input:'=IFNA(VLOOKUP(A1, B:C, 2, 0), "Missing")',output:'"Missing"',explanation:'Returns "Missing" only for #N/A errors, allowing other errors to surface.'}, tags:["logical","error-handling","na","lookup"], category:"logical", difficulty:"beginner", relatedFormulas:["iferror","isna","xlookup"] },
+  { id:"and", name:"AND", syntax:"AND(logical1, [logical2], ...)", description:"Returns TRUE if all arguments are true, FALSE if any argument is false. Used to test multiple conditions simultaneously.", example:{input:'=AND(A1 > 0, A1 < 100, B1 = "Active")',output:"TRUE",explanation:"Returns TRUE only if all three conditions are met."}, tags:["logical","conditional","multiple","all"], category:"logical", difficulty:"beginner", relatedFormulas:["or","not","if"] },
+  { id:"or", name:"OR", syntax:"OR(logical1, [logical2], ...)", description:"Returns TRUE if any argument is true, FALSE if all arguments are false. Used when only one of multiple conditions needs to be met.", example:{input:'=OR(A1 = "Manager", A1 = "Director", A1 = "VP")',output:"TRUE",explanation:"Returns TRUE if the role is any of the three specified titles."}, tags:["logical","conditional","any","multiple"], category:"logical", difficulty:"beginner", relatedFormulas:["and","not","if"] },
+  { id:"switch", name:"SWITCH", syntax:"SWITCH(expression, value1, result1, [value2, result2], ..., [default])", description:"Evaluates an expression against a list of values and returns the result for the first match. Similar to a CASE statement.", example:{input:'=SWITCH(WEEKDAY(TODAY()), 1,"Sun", 2,"Mon", 3,"Tue", 4,"Wed", 5,"Thu", 6,"Fri", 7,"Sat")',output:'"Mon"',explanation:"Maps the numeric weekday to a day abbreviation."}, tags:["logical","conditional","map","case","modern"], category:"logical", difficulty:"intermediate", relatedFormulas:["ifs","choose","if"] },
+  { id:"sum", name:"SUM", syntax:"SUM(number1, [number2], ...)", description:"Adds all numbers in a range of cells. The most commonly used Excel function.", example:{input:"=SUM(A1:A100)",output:"15750",explanation:"Adds all values in cells A1 through A100."}, tags:["math","add","total","aggregate","basic"], category:"math", difficulty:"beginner", relatedFormulas:["sumif","sumifs","sumproduct"] },
+  { id:"sumif", name:"SUMIF", syntax:"SUMIF(range, criteria, [sum_range])", description:"Adds the cells in a range that meet a single criterion. When sum_range is omitted, the range itself is summed.", example:{input:'=SUMIF(A2:A100, "North", B2:B100)',output:"48250",explanation:'Sums all values in B2:B100 where the corresponding A column equals "North".'}, tags:["math","conditional","sum","filter"], category:"math", difficulty:"beginner", relatedFormulas:["sumifs","countif","averageif"] },
+  { id:"sumifs", name:"SUMIFS", syntax:"SUMIFS(sum_range, criteria_range1, criteria1, [criteria_range2, criteria2], ...)", description:"Adds the cells in a range that meet multiple criteria. More flexible than SUMIF with support for many conditions.", example:{input:'=SUMIFS(C2:C100, A2:A100, "North", B2:B100, "Q4")',output:"12300",explanation:'Sums C values where A is "North" AND B is "Q4".'}, tags:["math","conditional","sum","multiple-criteria","filter"], category:"math", difficulty:"intermediate", relatedFormulas:["sumif","countifs","averageifs"] },
+  { id:"sumproduct", name:"SUMPRODUCT", syntax:"SUMPRODUCT(array1, [array2], ...)", description:"Multiplies corresponding components in the given arrays and returns the sum of those products. Extremely versatile for weighted calculations.", example:{input:"=SUMPRODUCT(B2:B10, C2:C10)",output:"23450",explanation:"Multiplies each quantity (B) by its unit price (C), then sums all results."}, tags:["math","multiply","sum","weighted","array"], category:"math", difficulty:"advanced", relatedFormulas:["sum","sumifs","mmult"] },
+  { id:"round", name:"ROUND", syntax:"ROUND(number, num_digits)", description:"Rounds a number to a specified number of digits. Positive num_digits rounds to decimal places; negative rounds to the left of the decimal.", example:{input:"=ROUND(3.14159, 2)",output:"3.14",explanation:"Rounds pi to 2 decimal places."}, tags:["math","round","decimal","precision"], category:"math", difficulty:"beginner", relatedFormulas:["roundup","rounddown","ceiling","floor","mround"] },
+  { id:"roundup", name:"ROUNDUP", syntax:"ROUNDUP(number, num_digits)", description:"Rounds a number up (away from zero) to the specified number of digits, regardless of the next digit.", example:{input:"=ROUNDUP(2.301, 1)",output:"2.4",explanation:"Always rounds up — 2.301 becomes 2.4 when rounding to 1 decimal place."}, tags:["math","round","ceiling","up"], category:"math", difficulty:"beginner", relatedFormulas:["rounddown","round","ceiling"] },
+  { id:"rounddown", name:"ROUNDDOWN", syntax:"ROUNDDOWN(number, num_digits)", description:"Rounds a number down (toward zero) to the specified number of digits, regardless of the next digit.", example:{input:"=ROUNDDOWN(9.99, 0)",output:"9",explanation:"Rounds 9.99 down to the nearest integer."}, tags:["math","round","floor","down","truncate"], category:"math", difficulty:"beginner", relatedFormulas:["roundup","round","floor","int"] },
+  { id:"mod", name:"MOD", syntax:"MOD(number, divisor)", description:"Returns the remainder after a number is divided by a divisor. Useful for alternating row shading, cycle detection, and more.", example:{input:"=MOD(ROW(), 2)",output:"0",explanation:"Returns 0 for even rows and 1 for odd rows — useful for striped formatting."}, tags:["math","remainder","modulo","division","cycle"], category:"math", difficulty:"intermediate", relatedFormulas:["int","quotient"] },
+  { id:"abs", name:"ABS", syntax:"ABS(number)", description:"Returns the absolute value of a number — the number without its sign.", example:{input:"=ABS(-150.75)",output:"150.75",explanation:"Removes the negative sign from -150.75."}, tags:["math","absolute","positive","distance"], category:"math", difficulty:"beginner", relatedFormulas:["sign","round"] },
+  { id:"average", name:"AVERAGE", syntax:"AVERAGE(number1, [number2], ...)", description:"Returns the arithmetic mean of its arguments. Ignores text and logical values in the range.", example:{input:"=AVERAGE(B2:B50)",output:"74.6",explanation:"Calculates the mean of all numeric values in B2:B50."}, tags:["statistics","mean","average","aggregate"], category:"statistical", difficulty:"beginner", relatedFormulas:["averageif","averageifs","median","mode.sngl"] },
+  { id:"averageif", name:"AVERAGEIF", syntax:"AVERAGEIF(range, criteria, [average_range])", description:"Returns the average of all cells in a range that meet a given criterion.", example:{input:'=AVERAGEIF(A2:A100, "Female", B2:B100)',output:"68200",explanation:'Calculates the average salary (column B) for all "Female" entries in column A.'}, tags:["statistics","conditional","average","filter"], category:"statistical", difficulty:"intermediate", relatedFormulas:["averageifs","average","sumif"] },
+  { id:"count", name:"COUNT", syntax:"COUNT(value1, [value2], ...)", description:"Counts the number of cells that contain numbers. Ignores text, logical values, and empty cells.", example:{input:"=COUNT(A1:A100)",output:"87",explanation:"Counts the 87 cells in A1:A100 that contain numeric values."}, tags:["statistics","count","numeric","aggregate"], category:"statistical", difficulty:"beginner", relatedFormulas:["counta","countif","countifs","countblank"] },
+  { id:"counta", name:"COUNTA", syntax:"COUNTA(value1, [value2], ...)", description:"Counts the number of cells that are not empty. Counts text, numbers, errors, and logical values.", example:{input:"=COUNTA(A1:A100)",output:"93",explanation:"Counts all 93 non-empty cells in the range, including text entries."}, tags:["statistics","count","non-empty","aggregate"], category:"statistical", difficulty:"beginner", relatedFormulas:["count","countif","countblank"] },
+  { id:"countif", name:"COUNTIF", syntax:"COUNTIF(range, criteria)", description:"Counts the number of cells within a range that meet a single condition.", example:{input:'=COUNTIF(B2:B100, ">500")',output:"34",explanation:"Counts the 34 cells in B2:B100 where the value is greater than 500."}, tags:["statistics","count","conditional","filter"], category:"statistical", difficulty:"beginner", relatedFormulas:["countifs","sumif","averageif"] },
+  { id:"countifs", name:"COUNTIFS", syntax:"COUNTIFS(criteria_range1, criteria1, [criteria_range2, criteria2], ...)", description:"Counts the number of cells that meet multiple criteria across multiple ranges.", example:{input:'=COUNTIFS(A2:A100, "Sales", B2:B100, ">50000")',output:"12",explanation:'Counts rows where department is "Sales" AND salary exceeds 50,000.'}, tags:["statistics","count","multiple-criteria","filter"], category:"statistical", difficulty:"intermediate", relatedFormulas:["countif","sumifs","averageifs"] },
+  { id:"max", name:"MAX", syntax:"MAX(number1, [number2], ...)", description:"Returns the largest value in a set of values. Ignores logical values and text.", example:{input:"=MAX(B2:B100)",output:"98750",explanation:"Returns the highest salary in the range."}, tags:["statistics","maximum","highest","top"], category:"statistical", difficulty:"beginner", relatedFormulas:["min","large","maxifs"] },
+  { id:"min", name:"MIN", syntax:"MIN(number1, [number2], ...)", description:"Returns the smallest value in a set of values. Ignores logical values and text.", example:{input:"=MIN(C2:C100)",output:"12500",explanation:"Returns the lowest value in the range."}, tags:["statistics","minimum","lowest","bottom"], category:"statistical", difficulty:"beginner", relatedFormulas:["max","small","minifs"] },
+  { id:"large", name:"LARGE", syntax:"LARGE(array, k)", description:"Returns the k-th largest value in a data set. Useful for top-N analysis.", example:{input:"=LARGE(B2:B100, 3)",output:"88500",explanation:"Returns the 3rd highest value in the range."}, tags:["statistics","rank","top-n","largest"], category:"statistical", difficulty:"intermediate", relatedFormulas:["small","max","rank"] },
+  { id:"small", name:"SMALL", syntax:"SMALL(array, k)", description:"Returns the k-th smallest value in a data set. Useful for bottom-N analysis.", example:{input:"=SMALL(C2:C100, 2)",output:"15000",explanation:"Returns the 2nd smallest value in the range."}, tags:["statistics","rank","bottom-n","smallest"], category:"statistical", difficulty:"intermediate", relatedFormulas:["large","min","rank"] },
+  { id:"median", name:"MEDIAN", syntax:"MEDIAN(number1, [number2], ...)", description:"Returns the middle number in a set of values. Half the values are above this value and half are below.", example:{input:"=MEDIAN(B2:B100)",output:"52000",explanation:"Returns the median salary — more robust to outliers than AVERAGE."}, tags:["statistics","median","middle","distribution"], category:"statistical", difficulty:"intermediate", relatedFormulas:["average","mode.sngl","percentile.inc"] },
+  { id:"unique", name:"UNIQUE", syntax:"UNIQUE(array, [by_col], [exactly_once])", description:"Returns a list of unique values from a range or array. A dynamic array function that spills results automatically.", example:{input:"=UNIQUE(A2:A100)",output:'{"Sales","HR","Engineering","Finance"}',explanation:"Returns each unique department name exactly once from the range."}, tags:["array","dynamic","unique","deduplicate","spill","modern"], category:"array", difficulty:"intermediate", relatedFormulas:["sort","filter","sequence"] },
+  { id:"sort", name:"SORT", syntax:"SORT(array, [sort_index], [sort_order], [by_col])", description:"Sorts the contents of a range or array. Returns a sorted dynamic array. sort_order: 1 = ascending, -1 = descending.", example:{input:"=SORT(A2:B20, 2, -1)",output:"Sorted array by column 2 descending",explanation:"Returns the range A2:B20 sorted by the second column in descending order."}, tags:["array","sort","order","dynamic","spill"], category:"array", difficulty:"intermediate", relatedFormulas:["sortby","unique","filter"] },
+  { id:"filter", name:"FILTER", syntax:"FILTER(array, include, [if_empty])", description:"Filters a range of data based on criteria you define, returning matching rows as a dynamic array.", example:{input:'=FILTER(A2:C100, B2:B100="Sales", "No results")',output:"All rows where department is Sales",explanation:'Returns all rows from A2:C100 where column B equals "Sales".'}, tags:["array","filter","dynamic","spill","query","modern"], category:"array", difficulty:"intermediate", relatedFormulas:["unique","sort","sortby"] },
+  { id:"sequence", name:"SEQUENCE", syntax:"SEQUENCE(rows, [cols], [start], [step])", description:"Generates a list of sequential numbers in an array. Useful for creating row numbers, ranges, or custom series.", example:{input:"=SEQUENCE(5, 1, 10, 5)",output:"{10; 15; 20; 25; 30}",explanation:"Creates a sequence of 5 numbers starting at 10 with a step of 5."}, tags:["array","sequence","numbers","generate","dynamic"], category:"array", difficulty:"intermediate", relatedFormulas:["sort","unique","filter"] },
+  { id:"vstack", name:"VSTACK", syntax:"VSTACK(array1, [array2], ...)", description:"Appends arrays vertically — stacks them on top of each other — and returns a single combined array.", example:{input:"=VSTACK(A1:C5, A10:C15)",output:"Combined 11-row array",explanation:"Combines the two non-contiguous ranges into a single vertical array."}, tags:["array","combine","stack","append","modern"], category:"array", difficulty:"advanced", relatedFormulas:["hstack","tocol","torow"] },
+  { id:"hstack", name:"HSTACK", syntax:"HSTACK(array1, [array2], ...)", description:"Appends arrays horizontally — places them side by side — and returns a single combined array.", example:{input:"=HSTACK(A1:A10, D1:D10, G1:G10)",output:"Combined 3-column array",explanation:"Combines three non-adjacent columns into a single horizontal array."}, tags:["array","combine","horizontal","append","modern"], category:"array", difficulty:"advanced", relatedFormulas:["vstack","tocol","torow"] },
+  { id:"isblank", name:"ISBLANK", syntax:"ISBLANK(value)", description:"Returns TRUE if the referenced cell is empty, FALSE otherwise. Useful for validation and conditional logic.", example:{input:'=IF(ISBLANK(A1), "Empty", "Has data")',output:'"Empty"',explanation:"Checks whether A1 is empty and returns a descriptive label."}, tags:["information","blank","empty","check","validation"], category:"information", difficulty:"beginner", relatedFormulas:["isnumber","istext","isna","iserror"] },
+  { id:"isnumber", name:"ISNUMBER", syntax:"ISNUMBER(value)", description:"Returns TRUE if the value is a number, FALSE otherwise. Helps detect numeric data in mixed-type ranges.", example:{input:'=ISNUMBER(VALUE("42"))',output:"TRUE",explanation:'Confirms that converting "42" with VALUE() produces a number.'}, tags:["information","check","number","type","validation"], category:"information", difficulty:"beginner", relatedFormulas:["istext","isblank","isna"] },
+  { id:"istext", name:"ISTEXT", syntax:"ISTEXT(value)", description:"Returns TRUE if the value is text, FALSE otherwise. Useful for data validation and cleaning workflows.", example:{input:"=ISTEXT(A1)",output:"TRUE",explanation:"Returns TRUE if cell A1 contains a text string."}, tags:["information","check","text","type","validation"], category:"information", difficulty:"beginner", relatedFormulas:["isnumber","isblank","value"] }
+];
+
+// ── State ──────────────────────────────────────────────────────────────────
+let query = "";
+let activeCat = "all";
+let activeDiff = "all";
+
+const grid = document.getElementById("grid");
+const resultsCount = document.getElementById("resultsCount");
+const totalCount = document.getElementById("totalCount");
+const overlay = document.getElementById("overlay");
+
+totalCount.textContent = `${FORMULAS.length} formulas`;
+
+// ── Highlight ──────────────────────────────────────────────────────────────
+function highlight(text, q) {
+  if (!q) return escHtml(text);
+  const escaped = q.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return escHtml(text).replace(new RegExp(`(${escaped})`, "gi"), "<mark>$1</mark>");
+}
+function escHtml(s) {
+  return String(s)
+    .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;").replace(/'/g,"&#39;");
+}
+
+// ── Score / filter ─────────────────────────────────────────────────────────
+function score(f, q) {
+  if (!q) return 1;
+  const lq = q.toLowerCase();
+  let s = 0;
+  const name = f.name.toLowerCase();
+  if (name === lq) s += 100;
+  else if (name.startsWith(lq)) s += 60;
+  else if (name.includes(lq)) s += 30;
+  if (f.tags.some(t => t.toLowerCase() === lq)) s += 40;
+  else if (f.tags.some(t => t.toLowerCase().includes(lq))) s += 20;
+  if (f.category.toLowerCase().includes(lq)) s += 15;
+  if (f.description.toLowerCase().includes(lq)) s += 10;
+  return s;
+}
+
+function filtered() {
+  return FORMULAS
+    .map(f => ({ f, s: score(f, query.trim()) }))
+    .filter(({ f, s }) => {
+      if (query.trim() && s === 0) return false;
+      if (activeCat !== "all" && f.category !== activeCat) return false;
+      if (activeDiff !== "all" && f.difficulty !== activeDiff) return false;
+      return true;
+    })
+    .sort((a, b) => b.s - a.s)
+    .map(x => x.f);
+}
+
+// ── Render ─────────────────────────────────────────────────────────────────
+function render() {
+  const items = filtered();
+  const q = query.trim();
+
+  resultsCount.innerHTML = items.length === FORMULAS.length
+    ? `Showing all <span>${FORMULAS.length}</span> formulas`
+    : `<span>${items.length}</span> of ${FORMULAS.length} formulas`;
+
+  if (items.length === 0) {
+    grid.innerHTML = `
+      <div class="empty" style="grid-column:1/-1">
+        <div class="empty-icon">🔍</div>
+        <h3>No formulas found</h3>
+        <p>Try a different keyword, category, or difficulty level.</p>
+      </div>`;
+    return;
+  }
+
+  grid.innerHTML = items.map((f, i) => `
+    <div class="card" data-id="${f.id}" style="animation-delay:${Math.min(i,20)*18}ms">
+      <div class="card-header">
+        <div class="card-name">${highlight(f.name, q)}</div>
+        <div class="badges">
+          <span class="badge badge-cat" data-cat="${f.category}">${f.category}</span>
+          <span class="badge badge-diff" data-diff="${f.difficulty}">${f.difficulty}</span>
+        </div>
+      </div>
+      <div class="card-syntax">
+        <span>${escHtml(f.syntax)}</span>
+        <button class="copy-btn" data-syntax="${escHtml(f.syntax)}">copy</button>
+      </div>
+      <div class="card-desc">${highlight(f.description, q)}</div>
+      <div class="example-block">
+        <div class="example-row">
+          <span class="ex-label">Input</span>
+          <span class="ex-val">${escHtml(f.example.input)}</span>
+        </div>
+        <div class="example-row" style="margin-top:4px">
+          <span class="ex-label">Output</span>
+          <span class="ex-val output">${escHtml(f.example.output)}</span>
+        </div>
+      </div>
+      <div class="tags">${f.tags.map(t => `<span class="tag">${escHtml(t)}</span>`).join("")}</div>
+    </div>
+  `).join("");
+}
+
+// ── Events ─────────────────────────────────────────────────────────────────
+let debounce;
+document.getElementById("search").addEventListener("input", e => {
+  clearTimeout(debounce);
+  debounce = setTimeout(() => { query = e.target.value; render(); }, 80);
+});
+
+document.querySelectorAll(".pill[data-cat]").forEach(btn => {
+  btn.addEventListener("click", () => {
+    activeCat = btn.dataset.cat;
+    document.querySelectorAll(".pill[data-cat]").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    render();
+  });
+});
+
+document.querySelectorAll(".pill[data-diff]").forEach(btn => {
+  btn.addEventListener("click", () => {
+    activeDiff = btn.dataset.diff;
+    document.querySelectorAll(".pill[data-diff]").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    render();
+  });
+});
+
+// Copy syntax
+document.addEventListener("click", e => {
+  const btn = e.target.closest(".copy-btn");
+  if (btn) {
+    e.stopPropagation();
+    navigator.clipboard.writeText(btn.dataset.syntax).then(() => {
+      btn.textContent = "✓";
+      setTimeout(() => btn.textContent = "copy", 1200);
+    });
+    return;
+  }
+
+  // Open modal
+  const card = e.target.closest(".card");
+  if (card) openModal(card.dataset.id);
+
+  // Related chip click
+  const chip = e.target.closest(".related-chip");
+  if (chip) openModal(chip.dataset.id);
+});
+
+// Close modal
+overlay.addEventListener("click", e => { if (e.target === overlay) closeModal(); });
+document.getElementById("closeBtn").addEventListener("click", closeModal);
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape") closeModal();
+  if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+    e.preventDefault();
+    document.getElementById("search").focus();
+  }
+});
+
+// ── Modal ──────────────────────────────────────────────────────────────────
+function openModal(id) {
+  const f = FORMULAS.find(x => x.id === id);
+  if (!f) return;
+
+  document.getElementById("m-name").textContent = f.name;
+  document.getElementById("m-badges").innerHTML = `
+    <span class="badge badge-cat" data-cat="${f.category}">${f.category}</span>
+    <span class="badge badge-diff" data-diff="${f.difficulty}">${f.difficulty}</span>`;
+  document.getElementById("m-syntax").textContent = f.syntax;
+  document.getElementById("m-desc").textContent = f.description;
+  document.getElementById("m-example").innerHTML = `
+    <div class="example-row">
+      <span class="ex-label">Input</span>
+      <span class="ex-val">${escHtml(f.example.input)}</span>
+    </div>
+    <div class="example-row" style="margin-top:4px">
+      <span class="ex-label">Output</span>
+      <span class="ex-val output">${escHtml(f.example.output)}</span>
+    </div>
+    <div class="ex-explain">${escHtml(f.example.explanation)}</div>`;
+  document.getElementById("m-tags").innerHTML = f.tags.map(t => `<span class="tag">${escHtml(t)}</span>`).join("");
+
+  const relSection = document.getElementById("m-related-section");
+  const relEl = document.getElementById("m-related");
+  if (f.relatedFormulas && f.relatedFormulas.length) {
+    relEl.innerHTML = f.relatedFormulas.map(r =>
+      `<span class="related-chip" data-id="${r}">${r.toUpperCase()}</span>`
+    ).join("");
+    relSection.style.display = "";
+  } else {
+    relSection.style.display = "none";
+  }
+
+  overlay.classList.add("open");
+  document.body.style.overflow = "hidden";
+}
+function closeModal() {
+  overlay.classList.remove("open");
+  document.body.style.overflow = "";
+}
+
+// ── Init ───────────────────────────────────────────────────────────────────
+render();
+</script>
+</body>
+</html>
